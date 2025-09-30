@@ -5,10 +5,12 @@ const carRoutes = require("./routes/carRoutes");
 const bookingRoutes = require("./routes/bookingRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const connectDB = require("./DB/connection");
+const cors = require("cors");
+
 require("dotenv").config();
 
 connectDB();
-
+app.use(cors());
 app.use(express.json());
 app.use("/", userRoutes);
 app.use("/api", carRoutes);
