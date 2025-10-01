@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import BookingForm from "./bookingForm.jsx";
 
 function Nav() {
+  const  [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -35,7 +38,8 @@ function Nav() {
     }
 
   return (
-    <nav style={{ backgroundColor: '#3B82F6' }}>  
+    <div>
+      <nav style={{ backgroundColor: '#3B82F6' }}>  
 
       <ul style={{ display: 'flex', listStyleType: 'none', padding: 20, marginLeft: 10, gap: 20, justifyContent: 'space-between', alignItems: 'center', fontSize: '20px' }}>
         <li>  Car Rental</li>
@@ -46,7 +50,12 @@ function Nav() {
         <li> <button onClick={handleManageUsers}>Manage Users</button></li>
         <li><button onClick={handleLogout}>Logout</button></li>
       </ul>
+      
     </nav>
+    <div>
+      {isOpen && <BookingForm />}
+    </div>
+    </div>
   );
 
 }

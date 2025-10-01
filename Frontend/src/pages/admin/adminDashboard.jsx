@@ -1,5 +1,5 @@
-import Navigation from '../../components/admin/navigation';
-import Footer from '../../components/Footer';
+import Navigation from '../../components/admin/Navigation';
+import Footer from '../../components/admin/Footer';
 
 function AdminDashboard() {
   return (

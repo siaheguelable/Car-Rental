@@ -1,9 +1,9 @@
 import React from 'react';    
 import AdminDashboard from './pages/admin/adminDashboard';
 import Login from './pages/admin/login';
-import {BrowserRouter,Routes,Route,Link} from 'react-router-dom';
+import {BrowserRouter,Routes,Route,Navigate} from 'react-router-dom';
 import Register from './pages/admin/register';  
- 
+import UserDashboard from './pages/user/userDashboard'; // <-- Add this line
 
 function App() {
 
@@ -26,6 +26,7 @@ function App() {
  return (
   <BrowserRouter>
     <Routes>
+      <Route path="/" element={<Navigate to="/login" />} /> {/* Add this line */}
       <Route path="/adminDashboard" element={<AdminDashboard />} />
       <Route path="/userDashboard" element={<UserDashboard />} />
       
