@@ -6,6 +6,8 @@ const bookingRoutes = require("./routes/bookingRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const connectDB = require("./DB/connection");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger-output.json"); // Add this line
 
 require("dotenv").config();
 
@@ -15,6 +17,9 @@ const corsOptions = {
   methods: ["GET", "POST", "PUT", "DELETE"], // Replace with your frontend URL
   optionsSuccessStatus: 200,
 };
+
+// Swagger route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/", userRoutes);
@@ -29,4 +34,5 @@ const host = process.env.HOST || "localhost";
 
 app.listen(port, () => {
   console.log(`Server is running at http://${host}:${port}`);
+  console.log(`Swagger docs at http://${host}:${port}/api-docs`);
 });

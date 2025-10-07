@@ -7,6 +7,11 @@ routes.use((req, res, next) => {
 });
 
 // Admin routes
-routes.post("/admin/bookings", adminController.createAdmin);
+
+routes.post("/admin", adminController.createAdmin);
+routes.get("/admin", adminController.getAllAdmins);
+routes.get("/admin/:id", adminController.getAdminById);
+routes.put("/admin/:id", adminController.updateAdmin);
+routes.delete("/admin/:id", adminController.deleteAdmin);
 
 module.exports = routes;
