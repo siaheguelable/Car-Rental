@@ -11,9 +11,7 @@ const userController = require("../controllers/userController");
  *         description: List of users
  */
 // Example GET /users route
-routes.get("/users", (req, res) => {
-  res.json({ message: "Users route works!" });
-});
+routes.get("/users", userController.getAllUsers);
 
 // Create a new user
 routes.post("/users", userController.createUser);
