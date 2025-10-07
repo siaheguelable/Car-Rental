@@ -13,7 +13,7 @@ require("dotenv").config();
 
 connectDB();
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: ["http://localhost:5173", "http://localhost:30000"],
   methods: ["GET", "POST", "PUT", "DELETE"], // Replace with your frontend URL
   optionsSuccessStatus: 200,
 };
