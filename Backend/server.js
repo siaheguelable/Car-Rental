@@ -13,8 +13,12 @@ require("dotenv").config();
 
 connectDB();
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://localhost:30000"],
-  methods: ["GET", "POST", "PUT", "DELETE"], // Replace with your frontend URL
+  origin: [
+    // "http://localhost:5173",
+    // "http://localhost:30000",
+    "https://car-rental-si5p.onrender.com",
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   optionsSuccessStatus: 200,
 };
 
