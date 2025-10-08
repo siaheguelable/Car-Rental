@@ -12,24 +12,17 @@ const swaggerSpec = require("./swagger-output.json"); // Add this line
 require("dotenv").config();
 
 connectDB();
-const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:30000",
-    "https://car-rental-si5p.onrender.com",
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  optionsSuccessStatus: 200,
-};
 
-// Swagger route
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use(cors(corsOptions));
+// Enable CORS
+app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use("/", userRoutes);
 app.use("/api", carRoutes);
 app.use("/api", bookingRoutes);
 app.use("/api", adminRoutes);
+// Swagger route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // The environment variables are loaded from the .env file
 const port = process.env.PORT || 30000;
 
