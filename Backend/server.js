@@ -32,11 +32,10 @@ app.use("/api", bookingRoutes);
 app.use("/api", adminRoutes);
 // The environment variables are loaded from the .env file
 const port = process.env.PORT || 30000;
-const host = process.env.HOST || "localhost";
 
 // The server listens on the specified port
 
 app.listen(port, () => {
-  console.log(`Server is running at http://${host}:${port}`);
-  console.log(`Swagger docs at http://${host}:${port}/api-docs`);
+  console.log(`Server is running at : http://localhost:${port}`);
+  console.log(`Swagger docs at http://localhost:${port}/api-docs`);
 });
