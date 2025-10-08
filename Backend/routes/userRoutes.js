@@ -1,6 +1,10 @@
 const routes = require("express").Router();
 const userController = require("../controllers/userController");
 
+routes.get("/", (req, res) => {
+  res.send("User route is working");
+});
+
 /**
  * @swagger
  * /users:
