@@ -12,23 +12,31 @@ const swaggerSpec = require("./swagger-output.json"); // Add this line
 require("dotenv").config();
 
 connectDB();
+const corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:30000",
+    "https://car-rental-si5p.onrender.com",
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  optionsSuccessStatus: 200,
+};
 
-// Enable CORS
-app.use(cors());
+// Swagger route
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use("/", userRoutes);
 app.use("/api", carRoutes);
 app.use("/api", bookingRoutes);
 app.use("/api", adminRoutes);
-// Swagger route
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // The environment variables are loaded from the .env file
 const port = process.env.PORT || 30000;
+const host = process.env.RENDER_HOST || "localhost";
 
 // The server listens on the specified port
 
 app.listen(port, () => {
-  console.log(`Server is running at : http://localhost:${port}`);
-  console.log(`Swagger docs at http://localhost:${port}/api-docs`);
+  console.log(`Server is running at http://${host}:${port}`);
+  console.log(`Swagger docs at http://${host}:${port}/api-docs`);
 });

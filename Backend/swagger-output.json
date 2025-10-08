@@ -5,10 +5,10 @@
     "description": "API documentation generated with swagger-autogen",
     "version": "1.0.0"
   },
-  "host": "localhost:30000",
+  "host": "car-rental-si5p.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/users": {
