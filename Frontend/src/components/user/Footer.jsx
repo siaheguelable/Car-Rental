@@ -1,11 +1,15 @@
 import React from "react";
-
 function Footer() {
   return (
-    <footer>
-      <p>© 2025 Car Rental. All rights reserved.</p>
+    <footer className="mt-12 bg-white border-t">
+      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-gray-500">
+        © 2025 Car Rental. All rights reserved.
+      </div>
     </footer>
   );
 }
 
 export default Footer;
+
+
+

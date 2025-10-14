@@ -1,9 +1,13 @@
 const adminModel = require("../models/adminModel");
-
+const { adminValidate } = require("../validators/adminValidator");
 // Get all bookings (Admin)
 exports.createAdmin = async (req, res) => {
   try {
     const newAdmin = new adminModel(req.body);
+    const errors = adminValidate(newAdmin);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Validation errors", errors });
+    }
     await newAdmin.save();
     res.status(201).json(newAdmin);
   } catch (error) {
@@ -40,6 +44,10 @@ exports.updateAdmin = async (req, res) => {
       req.body,
       { new: true }
     );
+    const errors = adminValidate(updatedAdmin);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Validation errors", errors });
+    }
     if (!updatedAdmin) {
       return res.status(404).json({ message: "Admin not found" });
     }

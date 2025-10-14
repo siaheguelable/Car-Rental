@@ -1,8 +1,34 @@
 const bookingModel = require("../models/bookingModel.js");
+const { validateBooking } = require("../validators/bookingValidator.js");
 // Create a new booking
 exports.createBooking = async (req, res) => {
   try {
-    const newBooking = new bookingModel(req.body);
+    // Prefer authenticated session user when available
+    const userId = (req.user && req.user._id) || (req.body && req.body.user);
+    if (!userId) {
+      return res
+        .status(401)
+        .json({
+          message: "Unauthorized: you must be logged in to create a booking.",
+        });
+    }
+
+    // Build booking payload server-side to avoid trusting client-provided user id
+    const payload = {
+      user: userId,
+      car: req.body.car,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      totalPrice: req.body.totalPrice,
+      pickupLocation: req.body.pickupLocation,
+      dropoffLocation: req.body.dropoffLocation,
+    };
+
+    const newBooking = new bookingModel(payload);
+    const errors = validateBooking(newBooking);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Validation errors", errors });
+    }
     await newBooking.save();
     res.status(201).json(newBooking);
   } catch (error) {
@@ -38,8 +64,9 @@ exports.updateBooking = async (req, res) => {
       req.body,
       { new: true }
     );
-    if (!updatedBooking) {
-      return res.status(404).json({ message: "Booking not found" });
+    const errors = validateBooking(updatedBooking);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Validation errors", errors });
     }
     res.status(200).json(updatedBooking);
   } catch (error) {

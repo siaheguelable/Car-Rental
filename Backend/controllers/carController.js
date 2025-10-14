@@ -1,8 +1,13 @@
 const carModel = require("../models/carModel.js");
+const { validateCar } = require("../validators/carValidator.js");
 // Create a new car
 exports.createCar = async (req, res) => {
   try {
     const newCar = new carModel(req.body);
+    const errors = validateCar(newCar);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Validation errors", errors });
+    }
     await newCar.save();
     res.status(201).json({ message: "Car created successfully", car: newCar });
   } catch (error) {
@@ -22,8 +27,9 @@ exports.getAllCars = async (req, res) => {
 exports.getCarById = async (req, res) => {
   try {
     const car = await carModel.findById(req.params.id);
-    if (!car) {
-      return res.status(404).json({ message: "Car not found" });
+    const errors = validateCar(car);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Validation errors", errors });
     }
     res.status(200).json(car);
   } catch (error) {
@@ -37,6 +43,10 @@ exports.updateCarById = async (req, res) => {
       new: true,
       runValidators: true,
     });
+    const errors = validateCar(car);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Validation errors", errors });
+    }
     if (!car) {
       return res.status(404).json({ message: "Car not found" });
     }

@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 // import React, { useState } from "react";
 import BookingForm from "./bookingForm.jsx";
+import React from "react";
+import BookingList from "../user/BookingList.jsx";
 
 function Nav() {
   // const  [isOpen, setIsOpen] = useState(false);
@@ -9,20 +11,20 @@ function Nav() {
   const handleLogout = () => {
     // Implement your logout logic here
     localStorage.removeItem("token");
-    window.location.href = "/login";
+    window.location.href = "/adminLogin";
   }
 
 
     const handleAddBooking = () => {
       // Implement your add booking logic here
       console.log("Add Booking clicked");
-        navigate('/add-booking');
+        navigate('/BookingForm');
     }
 
     const handleViewBookings = () => {
       // Implement your view bookings logic here
       console.log("View Bookings clicked");
-      navigate('/view-bookings');
+      navigate("/booking-list");
     }
 
     const handleManageCars = () => {

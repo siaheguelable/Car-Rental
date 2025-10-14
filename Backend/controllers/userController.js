@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel");
+const { validateUser } = require("../validators/userValidator");
 
 // get all users (API)
 exports.getAllUsers = async (req, res) => {
@@ -16,6 +17,10 @@ exports.getAllUsers = async (req, res) => {
 exports.createUser = async (req, res) => {
   try {
     const newUser = new userModel(req.body);
+    const errors = validateUser(newUser);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Validation errors", errors });
+    }
     await newUser.save();
     res
       .status(201)
@@ -57,8 +62,9 @@ exports.updateUserById = async (req, res) => {
     const user = await userModel.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const errors = validateUser(user);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: "Validation errors", errors });
     }
     res.status(200).json({ message: "User updated successfully", data: user });
   } catch (error) {
