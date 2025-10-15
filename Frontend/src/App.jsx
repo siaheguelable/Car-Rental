@@ -3,7 +3,7 @@ import AdminDashboard from './pages/admin/adminDashboard';
 import AdminLogin  from './pages/admin/adminLogin';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Register from './pages/admin/register';  
-import UserDashboard from './pages/user/UserDashboard'; 
+import UserDashboard from './pages/user/userDashboard'; 
 import UserLogin from './pages/user/userLogin'; // lowercase
 import BookingForm from './components/user/BookingForm'; // Add this import
 import OAuthCallback from "./pages/user/OAuthCallback";
