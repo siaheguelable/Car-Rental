@@ -9,7 +9,7 @@ function CarsList() {
   // Function to fetch cars from API
   const getCars = async () => {
     try {
-      const response = await axios.get("http://localhost:30000/api/cars", {
+      const response = await axios.get("https://car-rental-2-8y9s.onrender.com/api/cars", {
         withCredentials: true,
       });
       console.log("Fetched cars:", response.data);

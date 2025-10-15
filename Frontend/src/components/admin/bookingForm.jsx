@@ -24,7 +24,7 @@ const handleSubmit = (event) => {
     dropoffLocation: event.target.dropoffLocation.value,
   });
 
-  axios.post("http://localhost:30000/api/bookings", {
+  axios.post("https://car-rental-2-8y9s.onrender.com/api/bookings", {
       user: formData.user,
       car: formData.car,
       startDate: formData.startDate,

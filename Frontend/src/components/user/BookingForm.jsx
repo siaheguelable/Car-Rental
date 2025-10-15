@@ -27,7 +27,7 @@ const BookingForm = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const res = await axios.get("http://localhost:30000/api/cars");
+        const res = await axios.get("https://car-rental-2-8y9s.onrender.com/api/cars");
         setCars(res.data);
       } catch (err) {
         console.error("Error fetching cars:", err);
@@ -102,7 +102,7 @@ const BookingForm = () => {
         dropoffLocation: formData.dropoffLocation,
       };
 
-      await axios.post("http://localhost:30000/api/bookings", bookingData, { withCredentials: true });
+      await axios.post("https://car-rental-2-8y9s.onrender.com/api/bookings", bookingData, { withCredentials: true });
       setMessage("✅ Booking created successfully!");
       setFormData({
         car: "",

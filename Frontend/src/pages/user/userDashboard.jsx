@@ -24,7 +24,7 @@ function UserDashboard() {
     }
 
     // fetch bookings count for stats
-    axios.get('http://localhost:30000/api/bookings', { withCredentials: true })
+    axios.get('https://car-rental-2-8y9s.onrender.com/api/bookings', { withCredentials: true })
       .then(res => {
         if (Array.isArray(res.data)) setBookingsCount(res.data.length);
       })

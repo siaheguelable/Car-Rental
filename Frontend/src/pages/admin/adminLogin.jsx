@@ -2,7 +2,7 @@ import React from "react";
 
 function AdminLogin() {
   const handleLogin = () => {
-    window.location.href = "http://localhost:30000/auth/github";
+    window.location.href = "https://car-rental-2-8y9s.onrender.com/auth/github";
   };
 
   return (

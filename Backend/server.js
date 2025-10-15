@@ -103,9 +103,9 @@ app.get(
   passport.authenticate("github", { failureRedirect: "/" }),
   (req, res) => {
     if (req.user.role === "admin") {
-      res.redirect("http://localhost:5173/adminDashboard");
+      res.redirect(`${process.env.FRONTEND_URL}/adminDashboard`);
     } else {
-      res.redirect("http://localhost:5173/oauth-callback");
+      res.redirect(`${process.env.FRONTEND_URL}/oauth-callback`);
     }
   }
 );

@@ -10,7 +10,7 @@ function UserLogin() {
 
   // Handle GitHub login
   const handleGitLogin = () => {
-    window.location.href = "http://localhost:30000/auth/github"; // Your backend GitHub OAuth route
+    window.location.href = "https://car-rental-2-8y9s.onrender.com/auth/github"; // Your backend GitHub OAuth route
   };
 
   // Handle input change
