@@ -2,7 +2,7 @@ import React from 'react';
 import AdminDashboard from './pages/admin/adminDashboard';
 import AdminLogin  from './pages/admin/adminLogin';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import Register from './pages/admin/Register';  
+import Register from './pages/admin/register';  
 import UserDashboard from './pages/user/UserDashboard'; 
 import UserLogin from './pages/user/userLogin'; // lowercase
 import BookingForm from './components/user/BookingForm'; // Add this import
