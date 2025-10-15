@@ -1,5 +1,5 @@
 import React from 'react';    
-import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminDashboard from './pages/admin/adminDashboard';
 import AdminLogin  from './pages/admin/adminLogin';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Register from './pages/admin/Register';  
@@ -12,6 +12,7 @@ import BookingList from './components/user/BookingList'; // Add this import
 import ManageCars from './pages/admin/manage-cars'; // Add this import
 import AddCar from './components/admin/AddCar'; // Add this import
 import CarList from './components/admin/CarList'; // Add this import
+
 function App() {
   return (
     <BrowserRouter>
