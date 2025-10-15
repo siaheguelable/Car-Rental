@@ -7,7 +7,7 @@ function OAuthCallback() {
 
   useEffect(() => {
     axios
-      .get("https://car-rental-2-8y9s.onrender.com/api/user", { withCredentials: true })
+      .get("https://car-rental-si5p.onrender.com/api/user", { withCredentials: true })
       .then((res) => {
         // The login endpoint (`/api/users/login`) stores the user as res.data.user.
         // The /api/user endpoint returns the session user directly (req.user) in the server code.

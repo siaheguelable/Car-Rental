@@ -10,7 +10,7 @@ function UserLogin() {
 
   // Handle GitHub login
   const handleGitLogin = () => {
-    window.location.href = "https://car-rental-2-8y9s.onrender.com/auth/github"; // Your backend GitHub OAuth route
+    window.location.href = "https://car-rental-si5p.onrender.com/auth/github"; // Your backend GitHub OAuth route
   };
 
   // Handle input change
@@ -25,7 +25,7 @@ function UserLogin() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:30000/api/users/login", formData);
+      const res = await axios.post("https://car-rental-si5p.onrender.com/api/users/login", formData);
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 

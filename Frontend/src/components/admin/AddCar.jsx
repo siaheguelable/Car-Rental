@@ -36,7 +36,7 @@ function AddCar() {
     try {
         console.log("Form data being sent:", carData);
 
-      await axios.post("https://car-rental-2-8y9s.onrender.com/api/cars", carData);
+      await axios.post("https://car-rental-si5p.onrender.com/api/cars", carData);
         console.log("Car added successfully");
       // Redirect or show success message
     } catch (error) {

@@ -11,7 +11,7 @@ function BookingList() {
   const deleteHandler = async (id) => {
     if (!window.confirm("Are you sure you want to delete this booking?")) return;
     try {
-      await axios.delete(`https://car-rental-2-8y9s.onrender.com/api/bookings/${id}`, { withCredentials: true });
+      await axios.delete(`https://car-rental-si5p.onrender.com/api/bookings/${id}`, { withCredentials: true });
       setBookings((prev) => prev.filter((b) => (b._id || b.id) !== id));
     } catch (err) {
       console.error("Failed to delete booking", err);
@@ -21,7 +21,7 @@ function BookingList() {
 
   const getBookings = () => {
     // Fetch bookings from the API
-    return axios.get('https://car-rental-2-8y9s.onrender.com/api/bookings', { withCredentials: true })
+    return axios.get('https://car-rental-si5p.onrender.com/api/bookings', { withCredentials: true })
       .then(response => {
         // Handle the response data
         console.log(response.data);
