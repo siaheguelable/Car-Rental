@@ -21,7 +21,7 @@ function App() {
         <Route path="/userDashboard" element={<UserDashboard />} />
         <Route path="/adminLogin" element={<AdminLogin />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/userLogin" element={<UserLogin />} />
+        <Route path="/userLogin" element={<UserLogin />} /> 
         <Route path="/BookingForm" element={<BookingForm />} /> {/* Add this route */}
         <Route path="/oauth-callback" element={<OAuthCallback />} /> {/* Add this route */}
         <Route path="/EditBooking" element={<EditBooking />} /> {/* Add this route */}

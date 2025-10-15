@@ -149,3 +149,5 @@ app.listen(port, () => {
 });
 
 const User = require("./models/userModel");
+
+module.exports = app;

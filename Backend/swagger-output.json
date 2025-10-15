@@ -415,6 +415,21 @@
     "/api/admin": {
       "post": {
         "description": "Create New User (Admin)",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": { "example": "any" },
+                "email": { "example": "any" },
+                "password": { "example": "any" },
+                "role": { "example": "user or admin" }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
@@ -426,6 +441,7 @@
       },
       "get": {
         "description": "Get All Users (Admin)",
+
         "responses": {
           "200": {
             "description": "OK"
