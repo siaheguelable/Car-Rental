@@ -64,30 +64,39 @@ passport.use(
       clientSecret: process.env.GITHUB_CLIENT_SECRET || "GITHUB_CLIENT_SECRET",
       callbackURL:
         process.env.GITHUB_CALLBACK_URL ||
-        "http://localhost:30000/auth/github/callback",
+        "https://car-rental-si5p.onrender.com/auth/github/callback",
     },
     async function (accessToken, refreshToken, profile, done) {
       const User = require("./models/userModel");
-      // Example: treat a specific email or username as admin
-      const isAdmin =
-        profile._json?.email === "admin@example.com" ||
-        profile.username === "adminuser";
-      let user = await User.findOne({
-        email: profile._json?.email || profile.username,
-      });
-      if (!user) {
-        user = new User({
-          name: profile.displayName || profile.username || "",
-          email: profile._json?.email || profile.username,
-          password: Math.random().toString(36).slice(-8),
-          role: isAdmin ? "admin" : "user", // <-- set role here
-        });
-        await user.save();
-      } else if (user.role !== (isAdmin ? "admin" : "user")) {
-        user.role = isAdmin ? "admin" : "user";
-        await user.save();
+      try {
+        // Try several places for email: prefer profile.emails array, then profile._json.email, then username
+        const email =
+          profile.emails?.[0]?.value ||
+          profile._json?.email ||
+          profile.username;
+
+        // Example: treat a specific email or username as admin
+        const isAdmin =
+          email === "admin@example.com" || profile.username === "adminuser";
+
+        let user = await User.findOne({ email });
+        if (!user) {
+          user = new User({
+            name: profile.displayName || profile.username || "",
+            email,
+            // generate a random password for OAuth-created users (they can use OAuth to login)
+            password: Math.random().toString(36).slice(-8),
+            role: isAdmin ? "admin" : "user",
+          });
+          await user.save();
+        } else if (user.role !== (isAdmin ? "admin" : "user")) {
+          user.role = isAdmin ? "admin" : "user";
+          await user.save();
+        }
+        return done(null, user);
+      } catch (err) {
+        return done(err);
       }
-      return done(null, user);
     }
   )
 );
@@ -121,17 +130,49 @@ app.get("/health", (req, res) => {
   });
 });
 
-app.get(
-  "/auth/github/callback",
-  passport.authenticate("github", { failureRedirect: "/" }),
-  (req, res) => {
-    if (req.user.role === "admin") {
-      res.redirect(`${process.env.FRONTEND_URL}/adminDashboard`);
-    } else {
-      res.redirect(`${process.env.FRONTEND_URL}/oauth-callback`);
+// Use a custom callback so we can log detailed errors during OAuth exchange
+app.get("/auth/github/callback", (req, res, next) => {
+  passport.authenticate("github", (err, user, info) => {
+    if (err) {
+      console.error("Passport authenticate error:", err, info);
+      // Send a helpful error message for diagnostics
+      return res
+        .status(500)
+        .send("OAuth authentication failed on the server. Check server logs.");
     }
-  }
-);
+    if (!user) {
+      console.warn("OAuth completed but no user returned:", info);
+      return res.redirect(process.env.FRONTEND_URL || "/");
+    }
+
+    // Log the user for debugging (do not leak in production logs)
+    console.log(
+      "OAuth login successful for user:",
+      user.email || user._id || user
+    );
+
+    // Establish a session and redirect
+    req.logIn(user, (loginErr) => {
+      if (loginErr) {
+        console.error("Session login error:", loginErr);
+        return res
+          .status(500)
+          .send("Failed to establish session after OAuth. Check server logs.");
+      }
+      try {
+        if (user.role === "admin") {
+          return res.redirect(`${process.env.FRONTEND_URL}/adminDashboard`);
+        }
+        return res.redirect(`${process.env.FRONTEND_URL}/oauth-callback`);
+      } catch (redirectErr) {
+        console.error("Redirect error:", redirectErr);
+        return res
+          .status(500)
+          .send("OAuth succeeded but redirect failed. Check server logs.");
+      }
+    });
+  })(req, res, next);
+});
 
 app.get("/api/user", (req, res) => {
   // Return DB user object stored in session (already has password removed in deserialize)

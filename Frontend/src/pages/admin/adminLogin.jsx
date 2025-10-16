@@ -2,7 +2,7 @@ import React from "react";
 
 function AdminLogin() {
   const handleLogin = () => {
-    const apiUrl = import.meta.env.VITE_API_URL || window.location.origin;
+    const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.BACKEND_URL || "http://localhost:30000" || window.location.origin;
     window.location.href = `${apiUrl.replace(/\/$/, "")}/auth/github`;
   };
 

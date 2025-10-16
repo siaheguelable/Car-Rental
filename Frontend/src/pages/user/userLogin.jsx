@@ -10,7 +10,7 @@ function UserLogin() {
 
   // Determine backend API base URL using several possible env var names
   const getApiUrl = () =>
-    import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || import.meta.env.BACKEND_URL || window.location.origin;
+    import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || import.meta.env.BACKEND_URL || "http://localhost:30000" || window.location.origin;
 
   // Handle GitHub login
   const handleGitLogin = () => {
