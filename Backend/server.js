@@ -59,7 +59,8 @@ passport.use(
       clientSecret: process.env.GITHUB_CLIENT_SECRET || "GITHUB_CLIENT_SECRET",
       callbackURL:
         process.env.GITHUB_CALLBACK_URL ||
-        "http://localhost:30000/auth/github/callback",
+        //"http://localhost:30000/auth/github/callback",
+        "https://car-rental-si5p.onrender.com/auth/github/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       const User = require("./models/userModel");
