@@ -21,6 +21,7 @@ const corsOptions = {
     "http://localhost:5173",
     "http://localhost:30000",
     "https://car-rental-si5p.onrender.com",
+    "https://car-rental-2-8y9s.onrender.com",
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
