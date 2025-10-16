@@ -1,6 +1,8 @@
 import React from "react";
 
 import axios from "axios";
+// helper to resolve backend base URL from env or origin
+const getApiUrl = () => import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || import.meta.env.BACKEND_URL || window.location.origin;
 import { useState } from "react";
 function AddCar() {
 
@@ -36,7 +38,8 @@ function AddCar() {
     try {
         console.log("Form data being sent:", carData);
 
-      await axios.post("https://car-rental-si5p.onrender.com/api/cars", carData);
+  const apiUrl = getApiUrl();
+  await axios.post(`${apiUrl.replace(/\/$/, "")}/api/cars`, carData);
         console.log("Car added successfully");
       // Redirect or show success message
     } catch (error) {

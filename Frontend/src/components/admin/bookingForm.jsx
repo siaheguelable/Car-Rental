@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+const getApiUrl = () => import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || import.meta.env.BACKEND_URL || window.location.origin;
 
 function BookingForm() {
     
@@ -24,7 +25,8 @@ const handleSubmit = (event) => {
     dropoffLocation: event.target.dropoffLocation.value,
   });
 
-  axios.post("https://car-rental-si5p.onrender.com/api/bookings", {
+  const apiUrl = getApiUrl();
+  axios.post(`${apiUrl.replace(/\/$/, "")}/api/bookings`, {
       user: formData.user,
       car: formData.car,
       startDate: formData.startDate,

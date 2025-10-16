@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+const getApiUrl = () => import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || import.meta.env.BACKEND_URL || window.location.origin;
 
 const BookingForm = () => {
   const [cars, setCars] = useState([]);
@@ -27,7 +28,8 @@ const BookingForm = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const res = await axios.get("https://car-rental-si5p.onrender.com/api/cars");
+  const apiUrl = getApiUrl();
+  const res = await axios.get(`${apiUrl.replace(/\/$/, "")}/api/cars`);
         setCars(res.data);
       } catch (err) {
         console.error("Error fetching cars:", err);
@@ -102,7 +104,8 @@ const BookingForm = () => {
         dropoffLocation: formData.dropoffLocation,
       };
 
-      await axios.post("https://car-rental-si5p.onrender.com/api/bookings", bookingData, { withCredentials: true });
+  const apiUrl = getApiUrl();
+  await axios.post(`${apiUrl.replace(/\/$/, "")}/api/bookings`, bookingData, { withCredentials: true });
       setMessage("✅ Booking created successfully!");
       setFormData({
         car: "",
