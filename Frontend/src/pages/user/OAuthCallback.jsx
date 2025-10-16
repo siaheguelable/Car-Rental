@@ -6,8 +6,9 @@ function OAuthCallback() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || import.meta.env.BACKEND_URL || window.location.origin;
     axios
-      .get("https://car-rental-si5p.onrender.com/api/user", { withCredentials: true })
+      .get(`${apiUrl.replace(/\/$/, "")}/api/user`, { withCredentials: true })
       .then((res) => {
         // The login endpoint (`/api/users/login`) stores the user as res.data.user.
         // The /api/user endpoint returns the session user directly (req.user) in the server code.

@@ -30,12 +30,26 @@ const corsOptions = {
 // CORS FIRST!
 app.use(cors(corsOptions));
 
+// If running behind a proxy (like Render), trust the proxy so secure cookies and
+// the request IPs are handled correctly.
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
 // Session and Passport setup
 app.use(
   session({
-    secret: "your-session-secret",
+    secret: process.env.SESSION_SECRET || "change-this-secret",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      // When behind HTTPS (Render provides HTTPS), mark cookie as secure in production
+      secure: process.env.NODE_ENV === "production",
+      // Allow cross-site cookies when frontend is on different domain (set to 'none' when secure)
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      // reasonable lifetime (ms)
+      maxAge: 24 * 60 * 60 * 1000,
+    },
   })
 );
 app.use(passport.initialize());
@@ -116,10 +130,7 @@ app.get("/api/user", (req, res) => {
 });
 
 // admin
-app.get(
-  "/auth/github",
-  passport.authenticate("github", { scope: ["user:email"] })
-);
+// ...existing code...
 
 // app.get(
 //   "/auth/github/callback",

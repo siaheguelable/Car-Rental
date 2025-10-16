@@ -2,7 +2,8 @@ import React from "react";
 
 function AdminLogin() {
   const handleLogin = () => {
-    window.location.href = "https://car-rental-si5p.onrender.com/auth/github";
+    const apiUrl = import.meta.env.VITE_API_URL || window.location.origin;
+    window.location.href = `${apiUrl.replace(/\/$/, "")}/auth/github`;
   };
 
   return (
