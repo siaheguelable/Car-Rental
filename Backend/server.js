@@ -183,7 +183,8 @@ app.get("/auth/github/callback", (req, res, next) => {
     }
     if (!user) {
       console.warn("OAuth completed but no user returned:", info);
-      return res.redirect(process.env.FRONTEND_URL || "/");
+      // Redirect to configured frontend or fallback to localhost dev frontend
+      return res.redirect(process.env.FRONTEND_URL || "http://localhost:5173");
     }
 
     // Log the user for debugging (do not leak in production logs)
@@ -207,10 +208,12 @@ app.get("/auth/github/callback", (req, res, next) => {
           .send("Failed to establish session after OAuth. Check server logs.");
       }
       try {
+        // Ensure we have a sane frontend URL to redirect to when env var is missing
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
         if (user.role === "admin") {
-          return res.redirect(`${process.env.FRONTEND_URL}/adminDashboard`);
+          return res.redirect(`${frontendUrl}/adminDashboard`);
         }
-        return res.redirect(`${process.env.FRONTEND_URL}/oauth-callback`);
+        return res.redirect(`${frontendUrl}/oauth-callback`);
       } catch (redirectErr) {
         console.error("Redirect error:", redirectErr);
         if (
