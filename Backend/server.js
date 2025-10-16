@@ -112,6 +112,15 @@ app.get(
   passport.authenticate("github", { scope: ["user:email"] })
 );
 
+// Health check endpoint to verify the backend is running on the deployed host
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok",
+    service: "car-rental-backend",
+    env: process.env.NODE_ENV || "development",
+  });
+});
+
 app.get(
   "/auth/github/callback",
   passport.authenticate("github", { failureRedirect: "/" }),
