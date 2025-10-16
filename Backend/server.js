@@ -69,6 +69,21 @@ passport.use(
     async function (accessToken, refreshToken, profile, done) {
       const User = require("./models/userModel");
       try {
+        // Conditional debug logging of the profile to help diagnose deployed errors
+        if (process.env.DEBUG_OAUTH === "true") {
+          // Log only key fields to avoid huge PII dumps; this is temporary and controlled via env
+          console.log("[DEBUG_OAUTH] profile.id:", profile.id);
+          console.log("[DEBUG_OAUTH] profile.username:", profile.username);
+          console.log(
+            "[DEBUG_OAUTH] profile.displayName:",
+            profile.displayName
+          );
+          console.log("[DEBUG_OAUTH] profile.emails:", profile.emails);
+          console.log(
+            "[DEBUG_OAUTH] profile._json keys:",
+            Object.keys(profile._json || {})
+          );
+        }
         // Try several places for email: prefer profile.emails array, then profile._json.email, then username
         const email =
           profile.emails?.[0]?.value ||
@@ -88,7 +103,24 @@ passport.use(
             password: Math.random().toString(36).slice(-8),
             role: isAdmin ? "admin" : "user",
           });
-          await user.save();
+          try {
+            await user.save();
+          } catch (saveErr) {
+            // Handle duplicate key race condition: if another process created the user
+            // between the findOne and save, fall back to finding the existing user.
+            if (
+              saveErr &&
+              (saveErr.code === 11000 || saveErr.codeName === "DuplicateKey")
+            ) {
+              console.warn(
+                "Duplicate key when creating OAuth user, fetching existing user",
+                saveErr
+              );
+              user = await User.findOne({ email });
+            } else {
+              throw saveErr;
+            }
+          }
         } else if (user.role !== (isAdmin ? "admin" : "user")) {
           user.role = isAdmin ? "admin" : "user";
           await user.save();
@@ -135,7 +167,15 @@ app.get("/auth/github/callback", (req, res, next) => {
   passport.authenticate("github", (err, user, info) => {
     if (err) {
       console.error("Passport authenticate error:", err, info);
-      // Send a helpful error message for diagnostics
+      // In non-production expose the stack to the browser for quick debugging
+      // Expose stack if not in production OR when DEBUG_OAUTH is explicitly enabled
+      if (
+        process.env.NODE_ENV !== "production" ||
+        process.env.DEBUG_OAUTH === "true"
+      ) {
+        return res.status(500).send(err.stack || String(err));
+      }
+      // Send a helpful generic error message in production
       return res
         .status(500)
         .send("OAuth authentication failed on the server. Check server logs.");
@@ -155,6 +195,12 @@ app.get("/auth/github/callback", (req, res, next) => {
     req.logIn(user, (loginErr) => {
       if (loginErr) {
         console.error("Session login error:", loginErr);
+        if (
+          process.env.NODE_ENV !== "production" ||
+          process.env.DEBUG_OAUTH === "true"
+        ) {
+          return res.status(500).send(loginErr.stack || String(loginErr));
+        }
         return res
           .status(500)
           .send("Failed to establish session after OAuth. Check server logs.");
@@ -166,6 +212,12 @@ app.get("/auth/github/callback", (req, res, next) => {
         return res.redirect(`${process.env.FRONTEND_URL}/oauth-callback`);
       } catch (redirectErr) {
         console.error("Redirect error:", redirectErr);
+        if (
+          process.env.NODE_ENV !== "production" ||
+          process.env.DEBUG_OAUTH === "true"
+        ) {
+          return res.status(500).send(redirectErr.stack || String(redirectErr));
+        }
         return res
           .status(500)
           .send("OAuth succeeded but redirect failed. Check server logs.");
