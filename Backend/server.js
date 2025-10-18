@@ -63,6 +63,12 @@ passport.use(
         "https://car-rental-si5p.onrender.com/oauth-callback",
     },
     async (accessToken, refreshToken, profile, done) => {
+      console.log("[OAuth] GitHub verify called. profile summary:", {
+        id: profile.id,
+        username: profile.username,
+        displayName: profile.displayName,
+        emails: profile.emails,
+      });
       const User = require("./models/userModel");
       try {
         const email =
@@ -83,10 +89,18 @@ passport.use(
             role: isAdmin ? "admin" : "user",
           });
           await user.save();
+          console.log("[OAuth] Created new user from GitHub profile:", {
+            email: user.email,
+            id: user._id,
+          });
         }
-
+        console.log(
+          "[OAuth] Verified user exists, proceeding to done(null,user)",
+          { id: user._id, email: user.email }
+        );
         return done(null, user);
       } catch (err) {
+        console.error("[OAuth] verify error:", err);
         return done(err);
       }
     }
@@ -112,9 +126,10 @@ app.get(
 );
 
 app.get("/oauth-callback", (req, res, next) => {
+  console.log("[OAuth] /oauth-callback route hit. query:", req.query);
   passport.authenticate("github", (err, user) => {
     if (err) {
-      console.error("OAuth error:", err);
+      console.error("[OAuth] authenticate error:", err);
       return res.redirect(
         `${
           process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com"
@@ -122,6 +137,9 @@ app.get("/oauth-callback", (req, res, next) => {
       );
     }
     if (!user) {
+      console.warn(
+        "[OAuth] authenticate returned no user; redirecting to frontend login"
+      );
       return res.redirect(
         `${
           process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com"
@@ -129,17 +147,23 @@ app.get("/oauth-callback", (req, res, next) => {
       );
     }
 
+    console.log("[OAuth] user returned from authenticate, calling req.logIn", {
+      id: user._id,
+      email: user.email,
+    });
     req.logIn(user, (loginErr) => {
       if (loginErr) {
-        console.error("Session error:", loginErr);
+        console.error("[OAuth] Session login error:", loginErr);
         return res.status(500).send("Session login failed.");
       }
 
       const frontendUrl =
         process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com";
       if (user.role === "admin") {
+        console.log("[OAuth] redirecting admin to adminDashboard");
         return res.redirect(`${frontendUrl}/adminDashboard`);
       }
+      console.log("[OAuth] redirecting user to frontend root with oauth flag");
       // Instead of redirecting to a frontend route that may 404 on static hosts,
       // send users to the frontend root with a flag so the SPA can finish the flow.
       return res.redirect(`${frontendUrl}/?oauth=github`);
