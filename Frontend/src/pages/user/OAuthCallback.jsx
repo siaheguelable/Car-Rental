@@ -8,8 +8,7 @@ function OAuthCallback() {
   useEffect(() => {
     const apiUrl =
       import.meta.env.VITE_API_URL ||
-      import.meta.env.REACT_APP_API_URL ||
-      import.meta.env.BACKEND_URL ||
+      
       window.location.origin;
 
     axios

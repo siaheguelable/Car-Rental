@@ -10,14 +10,18 @@ function UserLogin() {
 
   // Determine backend API base URL using several possible env var names
   const getApiUrl = () => {
-    const envUrl = import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || import.meta.env.BACKEND_URL;
-    if (envUrl) return envUrl;
-    // If running locally, use localhost backend; otherwise use deployed backend
-    if (typeof window !== "undefined" && window.location && window.location.hostname.includes("localhost")) {
-      return "http://localhost:30000";
-    }
-    return "https://car-rental-si5p.onrender.com";// i am trying my best 
-  };
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl) return envUrl.replace(/\/$/, ""); // remove trailing slash if any
+
+  if (
+    typeof window !== "undefined" &&
+    window.location.hostname.includes("localhost")
+  ) {
+    return "http://localhost:30000";
+  }
+
+  return "https://car-rental-si5p.onrender.com";
+};
 
   // Handle GitHub login
   const handleGitLogin = () => {
