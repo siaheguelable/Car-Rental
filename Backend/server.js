@@ -59,8 +59,8 @@ passport.use(
       clientSecret: process.env.GITHUB_CLIENT_SECRET || "GITHUB_CLIENT_SECRET",
       callbackURL:
         process.env.GITHUB_CALLBACK_URL ||
-        //"http://localhost:30000/auth/github/callback",
-        "https://car-rental-si5p.onrender.com/auth/github/callback",
+        //"http://localhost:30000/oauth-callback",
+        "https://car-rental-si5p.onrender.com/oauth-callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       const User = require("./models/userModel");
@@ -111,15 +111,21 @@ app.get(
   passport.authenticate("github", { scope: ["user:email"] })
 );
 
-app.get("/auth/github/callback", (req, res, next) => {
+app.get("/oauth-callback", (req, res, next) => {
   passport.authenticate("github", (err, user) => {
     if (err) {
       console.error("OAuth error:", err);
-      return res.status(500).send("OAuth authentication failed.");
+      return res.redirect(
+        `${
+          process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com"
+        }/userLogin`
+      );
     }
     if (!user) {
       return res.redirect(
-        process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com"
+        `${
+          process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com"
+        }/userLogin`
       );
     }
 
