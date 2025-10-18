@@ -118,7 +118,9 @@ app.get("/auth/github/callback", (req, res, next) => {
       return res.status(500).send("OAuth authentication failed.");
     }
     if (!user) {
-      return res.redirect(process.env.FRONTEND_URL || "http://localhost:5173");
+      return res.redirect(
+        process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com"
+      );
     }
 
     req.logIn(user, (loginErr) => {
@@ -127,7 +129,8 @@ app.get("/auth/github/callback", (req, res, next) => {
         return res.status(500).send("Session login failed.");
       }
 
-      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+      const frontendUrl =
+        process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com";
       if (user.role === "admin") {
         return res.redirect(`${frontendUrl}/adminDashboard`);
       }
