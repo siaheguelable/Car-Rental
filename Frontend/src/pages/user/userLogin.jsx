@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,40 @@ function UserLogin() {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // When backend redirects to the frontend root with ?oauth=github, complete the flow
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("oauth") === "github") {
+      // try to fetch current session user
+      const apiUrl = getApiUrl();
+      axios
+        .get(`${apiUrl.replace(/\/$/, "")}/api/user`, { withCredentials: true })
+        .then((res) => {
+          const user = res.data?.user ?? res.data;
+          if (!user) {
+            // nothing to do, remain on login
+            return;
+          }
+          localStorage.setItem("user", JSON.stringify(user));
+          // navigate based on role
+          if (user.role === "admin") {
+            navigate("/adminDashboard");
+          } else {
+            navigate("/userDashboard");
+          }
+        })
+        .catch((err) => {
+          console.error("OAuth session fetch failed:", err);
+        })
+        .finally(() => {
+          // remove oauth param from URL to keep things clean
+          params.delete("oauth");
+          const newUrl = window.location.pathname + (params.toString() ? `?${params.toString()}` : "");
+          window.history.replaceState({}, document.title, newUrl);
+        });
+    }
+  }, [navigate]);
 
   // Determine backend API base URL using several possible env var names
   const getApiUrl = () => {

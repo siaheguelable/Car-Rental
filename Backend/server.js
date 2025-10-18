@@ -140,7 +140,9 @@ app.get("/oauth-callback", (req, res, next) => {
       if (user.role === "admin") {
         return res.redirect(`${frontendUrl}/adminDashboard`);
       }
-      return res.redirect(`${frontendUrl}/oauth-callback`);
+      // Instead of redirecting to a frontend route that may 404 on static hosts,
+      // send users to the frontend root with a flag so the SPA can finish the flow.
+      return res.redirect(`${frontendUrl}/?oauth=github`);
     });
   })(req, res, next);
 });
