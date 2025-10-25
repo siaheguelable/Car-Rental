@@ -1,7 +1,6 @@
 import React from 'react';
 import BookingForm from './BookingForm';
 import axios from 'axios';
-const getApiUrl = () => import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || import.meta.env.BACKEND_URL || window.location.origin;
 import { useNavigate } from 'react-router-dom';
 import EditBooking from './EditBooking';
 
@@ -12,8 +11,7 @@ function BookingList() {
   const deleteHandler = async (id) => {
     if (!window.confirm("Are you sure you want to delete this booking?")) return;
     try {
-  const apiUrl = getApiUrl();
-  await axios.delete(`${apiUrl.replace(/\/$/, "")}/api/bookings/${id}`, { withCredentials: true });
+      await axios.delete(`http://localhost:30000/api/bookings/${id}`, { withCredentials: true });
       setBookings((prev) => prev.filter((b) => (b._id || b.id) !== id));
     } catch (err) {
       console.error("Failed to delete booking", err);
@@ -23,8 +21,8 @@ function BookingList() {
 
   const getBookings = () => {
     // Fetch bookings from the API
-  const apiUrl = getApiUrl();
-  return axios.get(`${apiUrl.replace(/\/$/, "")}/api/bookings`, { withCredentials: true })
+  
+  return axios.get("http://localhost:30000/api/bookings", { withCredentials: true })
       .then(response => {
         // Handle the response data
         console.log(response.data);

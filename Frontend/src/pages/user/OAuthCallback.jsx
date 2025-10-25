@@ -6,13 +6,12 @@ function OAuthCallback() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const apiUrl =
-      import.meta.env.VITE_API_URL ||
+   
       
       window.location.origin;
 
     axios
-      .get(`${apiUrl.replace(/\/$/, "")}/api/user`, { withCredentials: true })
+      .get("http://localhost:30000/auth/user", { withCredentials: true })
       .then((res) => {
         // The /api/user endpoint returns the session user directly (req.user) in the server code.
         // Normalize shapes: prefer res.data.user if present, otherwise use res.data

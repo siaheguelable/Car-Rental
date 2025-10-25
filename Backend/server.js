@@ -30,160 +30,71 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// ====== TRUST PROXY (for Render HTTPS) ======
-if (process.env.NODE_ENV === "production") {
-  app.set("trust proxy", 1);
-}
-
-// ====== SESSION SETUP ======
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "change-this-secret",
+    secret: process.env.SESSION_SECRET || "supersecret",
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-      maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: false, // Set to true if using HTTPS
+      sameSite: "lax",
     },
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
 
-// ====== PASSPORT GITHUB STRATEGY ======
-passport.use(
-  new GitHubStrategy(
-    {
-      clientID: process.env.GITHUB_CLIENT_ID || "GITHUB_CLIENT_ID",
-      clientSecret: process.env.GITHUB_CLIENT_SECRET || "GITHUB_CLIENT_SECRET",
-      callbackURL:
-        process.env.GITHUB_CALLBACK_URL ||
-        //"http://localhost:30000/oauth-callback",
-        "https://car-rental-si5p.onrender.com/oauth-callback",
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      console.log("[OAuth] GitHub verify called. profile summary:", {
-        id: profile.id,
-        username: profile.username,
-        displayName: profile.displayName,
-        emails: profile.emails,
-      });
-      const User = require("./models/userModel");
-      try {
-        const email =
-          profile.emails?.[0]?.value ||
-          profile._json?.email ||
-          profile.username;
+// // ====== PASSPORT GITHUB STRATEGY ======
+// passport.use(
+//   new GitHubStrategy(
+//     {
+//       clientID: process.env.GITHUB_CLIENT_ID || "GITHUB_CLIENT_ID",
+//       clientSecret: process.env.GITHUB_CLIENT_SECRET || "GITHUB_CLIENT_SECRET",
+//       callbackURL:
+//         process.env.GITHUB_CALLBACK_URL ||
+//         "http://localhost:30000/auth/github/callback",
+//       //"https://car-rental-si5p.onrender.com/oauth-callback",
+//     },
+//     async (accessToken, refreshToken, profile, done) => {
+//       console.log("[OAuth] GitHub verify called. profile summary:", {
+//         id: profile.id,
+//         username: profile.username,
+//         displayName: profile.displayName,
+//         emails: profile.emails,
+//       });
+//     }
+//   )
+// );
 
-        const isAdmin =
-          email === "admin@example.com" || profile.username === "adminuser";
+require("./routes/auth")(app); // import routes for authentication
 
-        let user = await User.findOne({ email });
+//admin and user login
 
-        if (!user) {
-          user = new User({
-            name: profile.displayName || profile.username || "",
-            email,
-            password: Math.random().toString(36).slice(-8),
-            role: isAdmin ? "admin" : "user",
-          });
-          await user.save();
-          console.log("[OAuth] Created new user from GitHub profile:", {
-            email: user.email,
-            id: user._id,
-          });
-        }
-        console.log(
-          "[OAuth] Verified user exists, proceeding to done(null,user)",
-          { id: user._id, email: user.email }
-        );
-        return done(null, user);
-      } catch (err) {
-        console.error("[OAuth] verify error:", err);
-        return done(err);
-      }
-    }
-  )
-);
+// // ====== PASSPORT SERIALIZE / DESERIALIZE ======
+// passport.serializeUser((user, done) => {
+//   done(null, user);
+// });
+// passport.deserializeUser((obj, done) => {
+//   done(null, obj);
+// });
 
-// ====== PASSPORT SESSION MANAGEMENT ======
-passport.serializeUser((user, done) => done(null, user._id));
-passport.deserializeUser(async (id, done) => {
-  try {
-    const User = require("./models/userModel");
-    const user = await User.findById(id).select("-password");
-    done(null, user || null);
-  } catch (err) {
-    done(err);
-  }
-});
-
-// ====== AUTH ROUTES ======
-app.get(
-  "/auth/github",
-  passport.authenticate("github", { scope: ["user:email"] })
-);
-
-app.get("/oauth-callback", (req, res, next) => {
-  console.log("[OAuth] /oauth-callback route hit. query:", req.query);
-  passport.authenticate("github", (err, user) => {
-    if (err) {
-      console.error("[OAuth] authenticate error:", err);
-      return res.redirect(
-        `${
-          process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com"
-        }/userLogin`
-      );
-    }
-    if (!user) {
-      console.warn(
-        "[OAuth] authenticate returned no user; redirecting to frontend login"
-      );
-      return res.redirect(
-        `${
-          process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com"
-        }/userLogin`
-      );
-    }
-
-    console.log("[OAuth] user returned from authenticate, calling req.logIn", {
-      id: user._id,
-      email: user.email,
-    });
-    req.logIn(user, (loginErr) => {
-      if (loginErr) {
-        console.error("[OAuth] Session login error:", loginErr);
-        return res.status(500).send("Session login failed.");
-      }
-
-      const frontendUrl =
-        process.env.FRONTEND_URL || "https://car-rental-2-8y9s.onrender.com";
-      if (user.role === "admin") {
-        console.log("[OAuth] redirecting admin to adminDashboard");
-        return res.redirect(`${frontendUrl}/adminDashboard`);
-      }
-      console.log("[OAuth] redirecting user to frontend root with oauth flag");
-      // Instead of redirecting to a frontend route that may 404 on static hosts,
-      // send users to the frontend root with a flag so the SPA can finish the flow.
-      return res.redirect(`${frontendUrl}/?oauth=github`);
-    });
-  })(req, res, next);
-});
-
-// ====== HEALTH CHECK ======
-app.get("/health", (req, res) => {
-  res.json({
-    status: "ok",
-    service: "car-rental-backend",
-    env: process.env.NODE_ENV || "development",
-  });
-});
-
-// ====== USER SESSION ROUTE ======
-app.get("/api/user", (req, res) => {
-  res.json(req.user || null);
-});
+// // ====== AUTH ROUTES ======
+// app.get(
+//   "/auth/github",
+//   passport.authenticate("github", { scope: ["user:email"] })
+// );
+// app.get(
+//   "/auth/github/callback",
+//   passport.authenticate("github", {
+//     failureRedirect: `${
+//       process.env.FRONTEND_URL || "http://localhost:5173"
+//     }/userLogin`,
+//     successRedirect: `${
+//       process.env.FRONTEND_URL || "http://localhost:5173"
+//     }/oauth-callback`,
+//   })
+// );
 
 // ====== SWAGGER DOCS ======
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

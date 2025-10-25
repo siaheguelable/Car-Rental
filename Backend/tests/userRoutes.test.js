@@ -14,7 +14,7 @@ describe("user API test to get all the users", () => {
 
 describe("user API test to get only one user", () => {
   it("should return  a single user", async () => {
-    const userId = "68e591fc41571553c0f16b82";
+    const userId = "68e594fe41571553c0f16b86";
     const res = await request(app).get(`/users/${userId}`);
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("data");

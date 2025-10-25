@@ -111,11 +111,11 @@ const EditBooking = ({ bookingId, onClose, onUpdate }) => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="form-card">
+      <form onSubmit={handleSubmit} className="form-grid cols-2">
         {/* Select Car */}
-        <div>
-          <label className="block text-gray-700 mb-1">Select Car</label>
+        <div className="">
+          <label className="form-label">Select Car</label>
           <select
             name="car"
             value={formData.car}
@@ -124,11 +124,10 @@ const EditBooking = ({ bookingId, onClose, onUpdate }) => {
               setSelectedCar(selected);
               handleChange(e);
             }}
-            className="w-full p-2 border border-gray-300 rounded-lg"
+            className="form-select"
             required
           >
             <option value="">-- Choose a car --</option>
-            {/* ✅ Safe rendering */}
             {Array.isArray(cars) &&
               cars.map((car) => (
                 <option key={car._id} value={car._id}>
@@ -138,78 +137,92 @@ const EditBooking = ({ bookingId, onClose, onUpdate }) => {
           </select>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 mb-1">Start Date</label>
-            <input
-              type="date"
-              name="startDate"
-              value={formData.startDate}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 mb-1">End Date</label>
-            <input
-              type="date"
-              name="endDate"
-              value={formData.endDate}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
-            />
-          </div>
+        <div className="">
+          <label className="form-label">Pickup Location</label>
+          <input
+            type="text"
+            name="pickupLocation"
+            value={formData.pickupLocation}
+            onChange={handleChange}
+            placeholder="e.g., Abidjan"
+            className="form-input"
+            required
+          />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 mb-1">Pickup Location</label>
-            <input
-              type="text"
-              name="pickupLocation"
-              value={formData.pickupLocation}
-              onChange={handleChange}
-              placeholder="e.g., Abidjan"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 mb-1">Drop-off Location</label>
-            <input
-              type="text"
-              name="dropoffLocation"
-              value={formData.dropoffLocation}
-              onChange={handleChange}
-              placeholder="e.g., Yamoussoukro"
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
-            />
-          </div>
+        <div>
+          <label className="form-label">Start Date</label>
+          <input
+            type="date"
+            name="startDate"
+            value={formData.startDate}
+            onChange={handleChange}
+            className="form-input"
+            required
+          />
         </div>
 
-        {/* Total Price */}
-        <div className="flex items-center justify-between bg-gray-50 p-3 rounded-md">
-          <div className="text-sm text-gray-600">Estimated total</div>
-          <div className="text-lg font-semibold text-green-700">
-            ${totalPrice || 0}
-          </div>
+        <div>
+          <label className="form-label">Drop-off Location</label>
+          <input
+            type="text"
+            name="dropoffLocation"
+            value={formData.dropoffLocation}
+            onChange={handleChange}
+            placeholder="e.g., Yamoussoukro"
+            className="form-input"
+            required
+          />
         </div>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-60"
-        >
-          {loading ? "Updating..." : "Update Booking"}
-        </button>
+        <div>
+          <label className="form-label">End Date</label>
+          <input
+            type="date"
+            name="endDate"
+            value={formData.endDate}
+            onChange={handleChange}
+            className="form-input"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="form-label">Notes (optional)</label>
+          <textarea
+            name="notes"
+            value={formData.notes || ""}
+            onChange={handleChange}
+            className="form-textarea"
+            placeholder="Any additional information..."
+          />
+        </div>
+
+        {/* Price and actions full-width */}
+        <div className="price-row" style={{ gridColumn: '1 / -1' }}>
+          <div className="muted">Estimated total</div>
+          <div className="text-lg font-semibold text-green-700">${totalPrice || 0}</div>
+        </div>
+
+        <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.75rem' }}>
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary"
+          >
+            {loading ? 'Updating...' : 'Update Booking'}
+          </button>
+
+          <button type="button" className="btn-secondary" onClick={onClose}>
+            Cancel
+          </button>
+        </div>
+
       </form>
-      {message && <div className="mt-4 text-center">{message}</div>}
+
+      {message && (
+        <div className={`message ${message.startsWith('✅') ? 'success' : 'error'}`}>{message}</div>
+      )}
     </div>
   );
 };

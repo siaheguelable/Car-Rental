@@ -3,10 +3,11 @@ const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    username: { type: String, required: true },
+    email: { type: String, unique: true },
+    password: { type: String },
     role: { type: String, enum: ["user", "admin"], default: "user" },
+    githubId: { type: String, unique: true }, // store GitHub id
   },
   { timestamps: true, collection: "users" }
 );

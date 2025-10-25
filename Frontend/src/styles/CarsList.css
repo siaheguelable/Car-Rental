@@ -1,0 +1,36 @@
+/* CarsList.css - styles for admin cars list */
+
+:root{
+  --card-bg: #ffffff;
+  --muted: #64748b;
+  --accent: #2563eb;
+  --accent-dark: #1e40af;
+  --radius: 10px;
+}
+
+.cars-wrap { max-width: 1100px; margin: 0 auto; padding: 1rem; }
+.cars-header { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:1rem; }
+.cars-title { font-size:1.25rem; font-weight:700; color:#0f172a; }
+
+.cars-controls { display:flex; gap:0.5rem; align-items:center; }
+.cars-add { background:var(--accent); color:white; padding:0.5rem 0.85rem; border-radius:8px; border:0; cursor:pointer; }
+
+.cars-list { display:grid; gap:0.9rem; grid-template-columns:1fr; }
+@media (min-width:768px) { .cars-list { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width:1100px) { .cars-list { grid-template-columns: repeat(3, 1fr); } }
+
+.car-card { background:var(--card-bg); border-radius:var(--radius); padding:0.85rem; box-shadow: 0 8px 20px rgba(2,6,23,0.04); display:flex; flex-direction:column; gap:0.5rem; }
+.car-top { display:flex; gap:0.75rem; align-items:center; }
+.car-thumb { width:72px; height:48px; border-radius:8px; background:#f1f5f9; object-fit:cover; }
+.car-info { flex:1; }
+.car-name { font-weight:700; color:#0f172a; }
+.car-meta { color:var(--muted); font-size:0.95rem; }
+
+.car-bottom { display:flex; justify-content:space-between; align-items:center; margin-top:0.5rem; }
+.car-price { font-weight:700; color:var(--accent); }
+.car-actions { display:flex; gap:0.5rem; }
+.btn-sm { padding:0.35rem 0.6rem; border-radius:8px; border:1px solid #e6eefb; background:#fff; cursor:pointer; }
+.btn-edit { background:#f8fafc; }
+.btn-delete { background:#fff; border-color:#fee2e2; color:#b91c1c; }
+
+.cars-empty { text-align:center; padding:1.5rem; background:#fff; border-radius:var(--radius); color:var(--muted); }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-const getApiUrl = () => import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || import.meta.env.BACKEND_URL || window.location.origin;
+import "../../styles/editbooking.css";
 
 const BookingForm = () => {
   const [cars, setCars] = useState([]);
@@ -28,8 +28,8 @@ const BookingForm = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-  const apiUrl = getApiUrl();
-  const res = await axios.get(`${apiUrl.replace(/\/$/, "")}/api/cars`);
+        
+        const res = await axios.get("http://localhost:30000/api/cars", { withCredentials: true });
         setCars(res.data);
       } catch (err) {
         console.error("Error fetching cars:", err);
@@ -104,8 +104,8 @@ const BookingForm = () => {
         dropoffLocation: formData.dropoffLocation,
       };
 
-  const apiUrl = getApiUrl();
-  await axios.post(`${apiUrl.replace(/\/$/, "")}/api/bookings`, bookingData, { withCredentials: true });
+      await axios.post(`http://localhost:30000/api/bookings`, bookingData, { withCredentials: true });
+  
       setMessage("✅ Booking created successfully!");
       setFormData({
         car: "",
@@ -130,24 +130,18 @@ const BookingForm = () => {
   };
 
   return (
-    <div className="w-full">
-      <div className="bg-white p-6 rounded-lg shadow-sm w-full">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Book a Car</h2>
+    <div className="form-card">
+      <div>
+        <h2 style={{ margin: 0, marginBottom: '0.75rem' }}>Book a Car</h2>
 
         {message && (
-          <p
-            className={`text-center mb-4 ${
-              message.startsWith("✅") ? "text-green-600" : "text-red-500"
-            }`}
-          >
-            {message}
-          </p>
+          <div className={`message ${message.startsWith("✅") ? "success" : "error"}`}>{message}</div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="form-grid">
           {/* Select Car */}
           <div>
-            <label className="block text-gray-700 mb-1">Select Car</label>
+            <label className="form-label">Select Car</label>
             <select
               name="car"
               value={formData.car}
@@ -156,86 +150,84 @@ const BookingForm = () => {
                 setSelectedCar(selected);
                 handleChange(e);
               }}
-              className="w-full p-2 border border-gray-300 rounded-lg"
+              className="form-input"
               required
             >
               <option value="">-- Choose a car --</option>
               {cars.map((car) => (
                 <option key={car._id} value={car._id}>
-                  {car.make} {car.model} — ${car.pricePerDay}/day
+                  {car.make || car.name} {car.model || car.brand} — ${car.pricePerDay}/day
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="form-grid cols-2">
             <div>
-              <label className="block text-gray-700 mb-1">Start Date</label>
+              <label className="form-label">Start Date</label>
               <input
                 type="date"
                 name="startDate"
                 value={formData.startDate}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-lg"
+                className="form-input"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-1">End Date</label>
+              <label className="form-label">End Date</label>
               <input
                 type="date"
                 name="endDate"
                 value={formData.endDate}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-lg"
+                className="form-input"
                 required
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="form-grid cols-2">
             <div>
-              <label className="block text-gray-700 mb-1">Pickup Location</label>
+              <label className="form-label">Pickup Location</label>
               <input
                 type="text"
                 name="pickupLocation"
                 value={formData.pickupLocation}
                 onChange={handleChange}
                 placeholder="e.g., Abidjan"
-                className="w-full p-2 border border-gray-300 rounded-lg"
+                className="form-input"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-1">Drop-off Location</label>
+              <label className="form-label">Drop-off Location</label>
               <input
                 type="text"
                 name="dropoffLocation"
                 value={formData.dropoffLocation}
                 onChange={handleChange}
                 placeholder="e.g., Yamoussoukro"
-                className="w-full p-2 border border-gray-300 rounded-lg"
+                className="form-input"
                 required
               />
             </div>
           </div>
 
           {/* Total Price */}
-          <div className="flex items-center justify-between bg-gray-50 p-3 rounded-md">
-            <div className="text-sm text-gray-600">Estimated total</div>
-            <div className="text-lg font-semibold text-green-700">${totalPrice || 0}</div>
+          <div className="price-row">
+            <div className="muted">Estimated total</div>
+            <div className="amount">${totalPrice || 0}</div>
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-60"
-          >
-            {loading ? "Booking..." : "Book Now"}
-          </button>
+          <div style={{ gridColumn: '1 / -1' }}>
+            <button type="submit" disabled={loading} className="btn-primary" style={{ width: '100%' }}>
+              {loading ? "Booking..." : "Book Now"}
+            </button>
+          </div>
         </form>
       </div>
     </div>

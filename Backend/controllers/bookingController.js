@@ -6,11 +6,9 @@ exports.createBooking = async (req, res) => {
     // Prefer authenticated session user when available
     const userId = (req.user && req.user._id) || (req.body && req.body.user);
     if (!userId) {
-      return res
-        .status(401)
-        .json({
-          message: "Unauthorized: you must be logged in to create a booking.",
-        });
+      return res.status(401).json({
+        message: "Unauthorized: you must be logged in to create a booking.",
+      });
     }
 
     // Build booking payload server-side to avoid trusting client-provided user id
@@ -38,7 +36,8 @@ exports.createBooking = async (req, res) => {
 // Get all bookings
 exports.getAllBookings = async (req, res) => {
   try {
-    const bookings = await bookingModel.find();
+    const userId = (req.user && req.user._id) || (req.body && req.body.user);
+    const bookings = await bookingModel.find({ user: userId });
     res.status(200).json(bookings);
   } catch (error) {
     res.status(500).json({ message: "Error fetching bookings", error });

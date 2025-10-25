@@ -1,6 +1,6 @@
 import React from "react";
-
 import axios from "axios";
+import '../../styles/editbooking.css';
 // helper to resolve backend base URL from env or origin
 const getApiUrl = () => import.meta.env.VITE_API_URL || import.meta.env.REACT_APP_API_URL || import.meta.env.BACKEND_URL || window.location.origin;
 import { useState } from "react";
@@ -49,64 +49,107 @@ function AddCar() {
   };
 
   return (
-    <div>
-      <h1>Add Car</h1>
-        <form onSubmit={handleSubmit}>
+    <div className="form-card">
+      <h1 style={{ margin: 0, marginBottom: '0.75rem' }}>Add Car</h1>
+      <form onSubmit={handleSubmit} className="form-grid cols-2">
+        <div>
+          <label className="form-label">Name</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={formData.name}
+            onChange={handleChange}
+            className="form-input"
+            required
+          />
+        </div>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="model"
-          placeholder="Model"
-          value={formData.model}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="brand"
-          placeholder="Brand"
-          value={formData.brand}
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="year"
-          placeholder="Year"
-          value={formData.year}
-          onChange={handleChange}
-        />
-        <input
-          type="number"
-          name="pricePerDay"
-          placeholder="Price Per Day"
-          value={formData.pricePerDay}
-          onChange={handleChange}
-        />
-        <input
-          type="checkbox"
-          name="available"
-          checked={formData.available}
-          onChange={(e) =>
-            setFormData((prevData) => ({
-              ...prevData,
-              available: e.target.checked,
-            }))
-          }
-        />
-        <input
-          type="text"
-          name="image"
-          placeholder="Image URL"
-          value={formData.image}
-          onChange={handleChange}
-        />
-        <button type="submit">Add Car</button>
+        <div>
+          <label className="form-label">Model</label>
+          <input
+            type="text"
+            name="model"
+            placeholder="Model"
+            value={formData.model}
+            onChange={handleChange}
+            className="form-input"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="form-label">Brand</label>
+          <input
+            type="text"
+            name="brand"
+            placeholder="Brand"
+            value={formData.brand}
+            onChange={handleChange}
+            className="form-input"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="form-label">Year</label>
+          <input
+            type="number"
+            name="year"
+            placeholder="Year"
+            value={formData.year}
+            onChange={handleChange}
+            className="form-input"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="form-label">Price Per Day ($)</label>
+          <input
+            type="number"
+            name="pricePerDay"
+            placeholder="Price Per Day"
+            value={formData.pricePerDay}
+            onChange={handleChange}
+            className="form-input"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="form-label">Image URL</label>
+          <input
+            type="text"
+            name="image"
+            placeholder="Image URL"
+            value={formData.image}
+            onChange={handleChange}
+            className="form-input"
+          />
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <input
+            type="checkbox"
+            id="available"
+            name="available"
+            checked={formData.available}
+            onChange={(e) =>
+              setFormData((prevData) => ({
+                ...prevData,
+                available: e.target.checked,
+              }))
+            }
+          />
+          <label htmlFor="available" className="small">Available</label>
+        </div>
+
+        {/* Submit row full width */}
+        <div style={{ gridColumn: '1 / -1', display: 'flex', gap: '0.75rem' }}>
+          <button type="submit" className="btn-primary">Add Car</button>
+          <button type="button" className="btn-secondary" onClick={() => { setFormData({ name: '', model: '', brand: '', year: '', pricePerDay: '', available: true, image: '' }); }}>Reset</button>
+        </div>
       </form>
     </div>
   );

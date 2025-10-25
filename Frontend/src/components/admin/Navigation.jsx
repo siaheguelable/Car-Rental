@@ -1,61 +1,62 @@
-import { useNavigate } from "react-router-dom";
-// import React, { useState } from "react";
-import BookingForm from "./bookingForm.jsx";
 import React from "react";
-import BookingList from "../user/BookingList.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Nav() {
-  // const  [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Implement your logout logic here
     localStorage.removeItem("token");
     window.location.href = "/adminLogin";
-  }
+  };
 
+  const handleAddBooking = () => {
+    console.log("Add Booking clicked");
+    navigate('/BookingForm');
+  };
 
-    const handleAddBooking = () => {
-      // Implement your add booking logic here
-      console.log("Add Booking clicked");
-        navigate('/BookingForm');
-    }
+  const handleViewBookings = () => {
+    console.log("View Bookings clicked");
+    navigate('/booking-list');
+  };
 
-    const handleViewBookings = () => {
-      // Implement your view bookings logic here
-      console.log("View Bookings clicked");
-      navigate("/booking-list");
-    }
+  const handleManageCars = () => {
+    console.log("Manage Cars clicked");
+    navigate('/manage-cars');
+  };
 
-    const handleManageCars = () => {
-      // Implement your manage cars logic here
-      console.log("Manage Cars clicked");
-      navigate('/manage-cars');
-    }
-
-    const handleManageUsers = () => {
-      // Implement your manage users logic here
-      console.log("Manage Users clicked");
-      navigate('/manage-users');
-    }
+  const handleManageUsers = () => {
+    console.log("Manage Users clicked");
+    navigate('/manage-users');
+  };
 
   return (
+    <nav className="top-nav" role="navigation" aria-label="Admin navigation">
+      <div className="nav-inner">
+        <div className="nav-brand">
+          <img className="nav-logo" src="/logo.png" alt="Car rental logo" />
+          <span>Car Rental</span>
+        </div>
 
-      <nav style={{ backgroundColor: '#3B82F6' }}>  
-
-      <ul style={{ display: 'flex', listStyleType: 'none', padding: 20, marginLeft: 10, gap: 20, justifyContent: 'space-between', alignItems: 'center', fontSize: '20px' }}>
-        <li>  Car Rental</li>
-        <li> <img src="path/to/your/image.jpg" alt="Description" /></li>
-        <li>  <button onClick={handleAddBooking}>Add Booking</button></li>
-        <li> <button onClick={handleViewBookings}>View Bookings</button></li>
-        <li> <button onClick={handleManageCars}>Manage Cars</button></li>
-        <li> <button onClick={handleManageUsers}>Manage Users</button></li>
-        <li><button onClick={handleLogout}>Logout</button></li>
-      </ul>
-      
+        <ul className="nav-list" role="menubar">
+          <li className="nav-item" role="none">
+            <button role="menuitem" className="nav-button" onClick={handleAddBooking}>Add Booking</button>
+          </li>
+          <li className="nav-item" role="none">
+            <button role="menuitem" className="nav-button" onClick={handleViewBookings}>View Bookings</button>
+          </li>
+          <li className="nav-item" role="none">
+            <button role="menuitem" className="nav-button" onClick={handleManageCars}>Manage Cars</button>
+          </li>
+          <li className="nav-item" role="none">
+            <button role="menuitem" className="nav-button" onClick={handleManageUsers}>Manage Users</button>
+          </li>
+          <li className="nav-item" role="none">
+            <button role="menuitem" className="nav-button nav-logout" onClick={handleLogout}>Logout</button>
+          </li>
+        </ul>
+      </div>
     </nav>
-   
   );
-
 }
+
 export default Nav;

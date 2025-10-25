@@ -1,0 +1,153 @@
+/* userstyle.css — styles for user auth pages (login/register) */
+
+:root{
+  --bg-start: #4f46e5; /* indigo */
+  --bg-mid: #7c3aed; /* purple */
+  --bg-end: #ec4899; /* pink */
+  --card: rgba(255,255,255,0.92);
+  --muted: #94a3b8;
+  --accent: #4f46e5;
+  --accent-600: #4338ca;
+  --radius: 18px;
+}
+
+/* page layout */
+.login-page{
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, var(--bg-start), var(--bg-mid), var(--bg-end));
+}
+
+.login-container{
+  width: 100%;
+  max-width: 480px;
+}
+
+.login-header{
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.login-title{
+  margin-top: 0.75rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+}
+.login-subtitle{
+  color: rgba(255,255,255,0.9);
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.login-card{
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.12);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* error */
+.error-msg{
+  color: #c92a2a;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+/* form fields */
+.login-form{ display:flex; flex-direction:column; gap:0.75rem; }
+.field{ position:relative; }
+.login-input{
+  width:100%;
+  padding:0.75rem 1rem;
+  border-radius:12px;
+  border:1px solid #e6e9ef;
+  font-size:0.98rem;
+  background:#fff;
+  box-sizing:border-box;
+}
+.login-input:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 6px rgba(79,70,229,0.06); }
+
+.password-field{ display:flex; align-items:center; gap:0.5rem; }
+.toggle-btn{ background:transparent; border:0; cursor:pointer; font-size:1.05rem; padding:0.25rem 0.5rem; }
+.toggle-btn:focus{ outline:none; }
+
+/* buttons */
+.btn-primary.full{
+  width:100%;
+  background:var(--accent);
+  color:#fff;
+  padding:0.75rem 1rem;
+  border-radius:12px;
+  border:0;
+  font-weight:700;
+  cursor:pointer;
+}
+.btn-primary.full:hover{ background:var(--accent-600); }
+
+.github-btn{
+  margin-top:0.7rem;
+  width:100%;
+  display:flex;
+  gap:0.6rem;
+  align-items:center;
+  justify-content:center;
+  padding:0.65rem 0.9rem;
+  border-radius:12px;
+  background:#111827;
+  color:#fff;
+  border:1px solid rgba(255,255,255,0.04);
+  cursor:pointer;
+}
+.github-btn:hover{ background:#0f1724; }
+.icon-github{ width:18px; height:18px; flex:0 0 18px; }
+
+.register-line{ text-align:center; margin-top:1rem; color:var(--muted); }
+.register-link{ color:var(--accent); font-weight:700; text-decoration:none; }
+.register-link:hover{ color:var(--accent-600); }
+
+@media (max-width:420px){
+  .login-container{ padding:0 0.25rem; }
+  .login-title{ font-size:1.35rem; }
+}
+
+/* ===== User dashboard styles ===== */
+.user-dashboard { background: #f3f4f6; min-height: 100vh; }
+.dashboard-header { background: linear-gradient(90deg, #06b6d4, #38bdf8); box-shadow: 0 8px 24px rgba(2,6,23,0.08); }
+.dashboard-header .inner { max-width:1200px; margin:0 auto;  display:flex; gap:1rem;  justify-content:space-between; }
+.welcome-badge {  display:inline-block;  font-weight:700; color:#0f172a; }
+.dashboard-stats { display:flex; gap:1rem; align-items:center; }
+.stat-card { color: black; padding:0.75rem 1rem;   min-width:120px; }
+.stat-card h3 { font-size:0.85rem; color:#64748b; margin:0; }
+.stat-card p { margin-top:0.35rem; font-size:1.35rem; font-weight:700; color:#0f172a; }
+
+.dashboard-actions { display:flex; gap:0.6rem; align-items:center; }
+.btn-danger { background:#ef4444; color:#fff; padding:0.45rem 0.7rem; border-radius:8px; border:0; cursor:pointer; }
+.btn-primary-light { background:#2563eb; color:#fff; padding:0.45rem 0.7rem; border-radius:8px; border:0; cursor:pointer; }
+.btn-danger:hover { background:#dc2626; }
+.btn-primary-light:hover { background:#1d4ed8; }
+
+.dashboard-main { max-width:1200px; margin:1rem auto; padding:0 1rem 2rem; }
+.cards-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:1rem; }
+@media(min-width:900px){ .cards-grid { grid-template-columns: repeat(3,1fr); } }
+
+.panel { background:#fff; padding:1rem; border-radius:12px; box-shadow:0 6px 18px rgba(2,6,23,0.06); }
+.panel h2 { margin:0 0 0.75rem 0; font-size:1.05rem; }
+
+.booking-layout { display:grid; grid-template-columns: 1fr; gap:1rem; }
+@media(min-width:1024px){ .booking-layout { grid-template-columns: 320px 1fr; } }
+
+.quick-booking {}
+.booking-list {}
+
+.support-box { display:flex; flex-direction:column; gap:0.25rem; }
+.support-box h3 { margin:0; font-size:0.9rem; color:#64748b; }
+.support-box p { margin:0; font-weight:700; }
+
+/* small helpers */
+.muted-text { color:#64748b; margin-top:0.25rem; }
